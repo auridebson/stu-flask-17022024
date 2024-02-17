@@ -1,1 +1,26 @@
-{% extends "template.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Tarefas</title>
+    <link rel="stylesheet" href="/static/css/index.css">
+</head>
+<body>
+    <h1>Lista de Tarefas</h1>
+
+    <div class="container-lista">
+        <ul>
+            {% for task in tasks %}
+            <li>{{ task }} <a href="{{ url_for('delete', task_id=loop.index-1) }}">[X]</a></li>
+            {% endfor %}
+        </ul>  
+    </div>
+
+    <form action="{{ url_for('add') }}" method="post">
+        <label for="task">Nova Tarefa:</label>
+        <input type="text" id="task" name="task" required>
+        <button type="submit">Adicionar</button>
+    </form>
+</body>
+</html>

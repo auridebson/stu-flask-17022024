@@ -1,38 +1,25 @@
-from flask import Flask, render_template
-
-lista = [
-    "Giovanni", "Maria", "Giuseppe", "Anna", "Luca", "Sofia", "Marco", "Giulia", "Alessandro", "Martina",
-    "Francesco", "Alessia", "Lorenzo", "Emma", "Matteo", "Chiara", "Leonardo", "Alice", "Luisa", "Niccolò",
-    "Alessandra", "Davide", "Elena", "Riccardo", "Laura", "Simone", "Sophia", "Federico", "Greta", "Gabriele",
-    "Beatrice", "Lorenza", "Filippo", "Camilla", "Mattia", "Elisa", "Nicola", "Aurora", "Vittorio", "Valentina",
-    "Alberto", "Caterina", "Roberto", "Gabriella", "Daniele", "Isabella", "Emanuele", "Clara", "Andrea"
-]
+from flask import Flask, render_template, request, redirect, url_for
 
 app = Flask(__name__)
 
+# Lista de tarefas
+tasks = []
+
 @app.route('/')
 def index():
-    nome = "auridebson"
-    idade = 39
-    return render_template('index.html', nome=nome, idade=idade, lista=lista)
+    return render_template('index.html', tasks=tasks)
 
+@app.route('/add', methods=['POST'])
+def add():
+    task = request.form.get('task')
+    tasks.append(task)
+    return redirect(url_for('index'))
 
-@app.route("/cadastrar", methods=["POST"])
-def cadastrar():
-    nome = request.form.get('nome')
-    lista.append(nome)
+@app.route('/delete/<int:task_id>')
+def delete(task_id):
+    if task_id < len(tasks):
+        del tasks[task_id]
+    return redirect(url_for('index'))
 
-    return """
-    <script>
-        alert("Cadastro realizado com sucesso")
-        window.location.href = "/"
-    </script>
-    """
-
-@app.route("/visulizar")
-def visualizar():
-    render_template("visualizar.html", lista)
-
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     app.run(debug=True)
